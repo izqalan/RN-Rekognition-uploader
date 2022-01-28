@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "face-indexer",
+    "name": "Face Indexer",
     "slug": "face-indexer",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,8 +20,9 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "dev.izqalan.uniten",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/eye-90.png",
         "backgroundColor": "#FFFFFF"
       }
     },
