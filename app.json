@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "to-do-list",
-    "slug": "to-do-list",
+    "name": "face-indexer",
+    "slug": "face-indexer",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/eye-90.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/eye-90.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

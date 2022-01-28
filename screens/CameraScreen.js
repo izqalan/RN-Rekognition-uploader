@@ -1,11 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AppRegistry, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Camera } from 'expo-camera';
+import AWS from 'aws-sdk';
+import config from '../lib/aws-config';
+import Toast from 'react-native-toast-message';
+import { Buffer } from "buffer"
+import { Modal, Portal, Button, Provider } from 'react-native-paper';
 
-export default function CameraScreen() {
+export default function CameraScreen({ route, navigation }) {
 
+  const { userId } = route.params;
+
+  AWS.config.update({
+    accessKeyId: config.accessKeyId,
+    secretAccessKey: config.secretAccessKey,
+    region: config.region,
+  });
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [visible, setVisible] = React.useState(false);
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = {backgroundColor: 'white', padding: 20, margin:20};
+
+  const cameraRef = useRef(null);
 
   useEffect(() => {
     (async () => {
@@ -22,18 +40,68 @@ export default function CameraScreen() {
   }
 
   const takePicture = async () => {
-    if (this.camera) {
-      const options = { quality: 0.5, base64: true };
-      const data = await this.camera.takePictureAsync(options);
-      console.log(data.uri);
+    showModal();
+    if (cameraRef) {
+      const options = { quality: 1, base64: true };
+      const data = await cameraRef.current.takePictureAsync(options);
+      const buffer = new Buffer.from(data.base64, 'base64');
+
+      try {
+        if (userId !== null || userId !== undefined) {
+          const rekognition = new AWS.Rekognition();
+          // index faces
+          const params = {
+            CollectionId: 'uniten-faces',
+            DetectionAttributes: [],
+            ExternalImageId: userId,
+            Image: {
+              Bytes: buffer,
+            },
+          };
+          const result = await rekognition.indexFaces(params).promise().then(() => {
+            Toast.show({
+              type: 'success',
+              text1: 'Successfully indexed face',
+              text2: 'Upload successful',
+              visibilityTime: 3000,
+            });
+            
+          });
+          console.log('indexFaces', result);
+          hideModal();
+        }
+      } catch (error) {
+        console.log(error)
+        Toast.show({
+          type: 'error',
+          text1: 'Uh oh!',
+          text2: 'Something went wrong!',
+        });
+        hideModal();
+      }
     }
   };
 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={Camera.Constants.Type.front}>
+      <Camera
+        ref={cameraRef}
+        style={styles.camera}
+        type={Camera.Constants.Type.front}>
+        <Toast />
+        <Provider>
+          <Portal>
+            <Modal 
+              visible={visible} 
+              onDismiss={hideModal}
+              dismissable={false}
+              contentContainerStyle={containerStyle}>
+              <Text>Uploading Image...</Text>
+            </Modal>
+          </Portal>
+        </Provider>
         <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => takePicture.bind(this)} style={styles.capture}>
+          <TouchableOpacity disabled={visible} onPress={() => takePicture()} style={styles.capture}>
             <Text style={{ fontSize: 14 }}> Capture </Text>
           </TouchableOpacity>
         </View>

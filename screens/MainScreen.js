@@ -5,11 +5,12 @@ import { GlobalStyles } from "../lib/constants";
 import { supabase } from '../lib/initSupabase';
 import { Button, Text } from 'react-native-paper';
 
-export default function ToDoListScreen({ navigation }) {
+export default function MainScreen({ navigation }) {
   useEffect(() => {
     fetchUser();
   }, []);
   const [user, setUser] = useState('Loading...');
+
   const fetchUser = async () => {
     const currentUser = await supabase.auth.user();
     const { data, error } = await supabase
@@ -35,20 +36,29 @@ export default function ToDoListScreen({ navigation }) {
       }}>
         {!user.firstname && <Text style={GlobalStyles.headerText}>Hello</Text>}
         {user.firstname && <Text style={GlobalStyles.headerText}>Hello, {user.firstname}</Text>}
-        <Button
-          onPress={() => navigation.navigate('Camera')}
-          mode="contained"
-          style={{ width: 75, height: 38, marginTop: 20 }}
-        >
-          New
-        </Button>
       </View>
       <View style={{
         flexDirection: 'column',
         justifyContent: 'space-between',
         marginHorizontal: 5,
-        marginBottom: 20
       }}>
+        <Button
+          icon={"account-circle-outline"}
+          labelStyle={{fontSize: 25}}
+          uppercase={false}
+          onPress={() => navigation.navigate('CameraScreen', {
+            userId: user.id 
+          })}
+          mode="outlined"
+          style={{
+            height: '50%',
+          }}
+          contentStyle={{
+            height: '100%',
+          }}
+        >
+          Index Faces
+        </Button>
       </View>
       <StatusBar style="auto" />
     </View>

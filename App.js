@@ -7,7 +7,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { DefaultTheme, Provider as PaperProvider, Button } from 'react-native-paper';
 import AuthScreen from './screens/AuthScreen'
 import ProfileScreen from "./screens/ProfileScreen";
-import ToDoListScreen from "./screens/ToDoListScreen";
+import MainScreen from "./screens/MainScreen";
 import CameraScreen from './screens/CameraScreen';
 import 'react-native-url-polyfill/auto';
 
@@ -35,7 +35,7 @@ function LoggedInTabs() {
     >
       <Tab.Screen
         name="To Do"
-        component={ToDoListScreen}
+        component={MainScreen}
         options={{
           tabBarLabel: 'Face Index',
           tabBarIcon: ({ color }) => (
@@ -69,11 +69,11 @@ export default function App() {
         <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
-              name={"App Logo"}
+              name={"UNITEN"}
               component={Container}
             />
             <Stack.Screen
-              name={"Camera"}
+              name={"CameraScreen"}
               component={CameraScreen}
               options={{
                 title: 'Camera',
