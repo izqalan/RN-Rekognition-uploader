@@ -1,9 +1,8 @@
-# To Do List
-A very simple React Native to do list app.
+# RN AWS Rekognition face indexer
+A very simple React Native to index images to AWS Rekognition
 
 ### Features
-* Create, or delete To Dos
-* Mark To Dos as complete/incomplete
+* Take selfie and upload to AWS
 * Authentication
 * Update email or password
 
