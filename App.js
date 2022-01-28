@@ -9,6 +9,7 @@ import AuthScreen from './screens/AuthScreen'
 import ProfileScreen from "./screens/ProfileScreen";
 import ToDoListScreen from "./screens/ToDoListScreen";
 import CameraScreen from './screens/CameraScreen';
+import 'react-native-url-polyfill/auto';
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -36,7 +37,7 @@ function LoggedInTabs() {
         name="To Do"
         component={ToDoListScreen}
         options={{
-          tabBarLabel: 'To Do List',
+          tabBarLabel: 'Face Index',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="view-list" color={color} size={26} />
           ),

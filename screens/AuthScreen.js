@@ -25,8 +25,8 @@ export default function AuthScreen() {
   return (
     <View style={GlobalStyles.container}>
       <View style={{ marginHorizontal: 5 }}>
-        <Text style={GlobalStyles.headerText}>To Do List App</Text>
-        <Text style={{ marginBottom: 15 }}>To Do List helps you manage your To Dos. Add or remove as many To Dos as you'd like.</Text>
+        <Text style={GlobalStyles.headerText}>Face Indexer App</Text>
+        <Text style={{ marginBottom: 15 }}>Upload your faces for facial recognition attendance taking.</Text>
         <Text style={GlobalStyles.subHeaderText}>Login or create a new account</Text>
       </View>
       <View style={GlobalStyles.verticallySpaced}>
