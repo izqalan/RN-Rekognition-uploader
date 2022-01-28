@@ -19,6 +19,7 @@ export default function AuthScreen() {
         : await supabase.auth.signUp({ email, password })
     if (!error && !user) Alert.alert('Check your email for the login link!')
     if (error) Alert.alert(error.message)
+    setSignInLoading(false)
   }
 
   return (

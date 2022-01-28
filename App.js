@@ -8,7 +8,7 @@ import { DefaultTheme, Provider as PaperProvider, Button } from 'react-native-pa
 import AuthScreen from './screens/AuthScreen'
 import ProfileScreen from "./screens/ProfileScreen";
 import ToDoListScreen from "./screens/ToDoListScreen";
-import CreateToDoScreen from "./screens/CreateToDoScreen";
+import CameraScreen from './screens/CameraScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -72,10 +72,10 @@ export default function App() {
               component={Container}
             />
             <Stack.Screen
-              name={"CreateToDo"}
-              component={CreateToDoScreen}
+              name={"Camera"}
+              component={CameraScreen}
               options={{
-                title: 'Create To Do',
+                title: 'Camera',
                 headerTintColor: '#000000',
               }}
             />
