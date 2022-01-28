@@ -6,6 +6,7 @@ import config from '../lib/aws-config';
 import Toast from 'react-native-toast-message';
 import { Buffer } from "buffer"
 import { Modal, Portal, Button, Provider } from 'react-native-paper';
+import { supabase } from '../lib/initSupabase';
 
 export default function CameraScreen({ route, navigation }) {
 
@@ -21,7 +22,7 @@ export default function CameraScreen({ route, navigation }) {
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = {backgroundColor: 'white', padding: 20, margin:20};
+  const containerStyle = { backgroundColor: 'white', padding: 20, margin: 20 };
 
   const cameraRef = useRef(null);
 
@@ -59,15 +60,19 @@ export default function CameraScreen({ route, navigation }) {
             },
           };
           const result = await rekognition.indexFaces(params).promise().then(() => {
-            Toast.show({
-              type: 'success',
-              text1: 'Successfully indexed face',
-              text2: 'Upload successful',
-              visibilityTime: 3000,
-            });
-            
+            supabase
+              .from('users')
+              .update({ imageUploaded: true })
+              .eq('id', userId)
+              .single().then(() => {
+                Toast.show({
+                  type: 'success',
+                  text1: 'Successfully indexed face',
+                  text2: 'Upload successful',
+                  visibilityTime: 3000,
+                });
+              })
           });
-          console.log('indexFaces', result);
           hideModal();
         }
       } catch (error) {
@@ -91,8 +96,8 @@ export default function CameraScreen({ route, navigation }) {
         <Toast />
         <Provider>
           <Portal>
-            <Modal 
-              visible={visible} 
+            <Modal
+              visible={visible}
               onDismiss={hideModal}
               dismissable={false}
               contentContainerStyle={containerStyle}>

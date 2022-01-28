@@ -44,21 +44,35 @@ export default function MainScreen({ navigation }) {
       }}>
         <Button
           icon={"account-circle-outline"}
-          labelStyle={{fontSize: 25}}
+          labelStyle={{ fontSize: 25 }}
           uppercase={false}
           onPress={() => navigation.navigate('CameraScreen', {
-            userId: user.id 
+            userId: user.id
           })}
           mode="outlined"
           style={{
             height: '50%',
+            borderColor: '#845ee3'
           }}
           contentStyle={{
             height: '100%',
           }}
         >
-          Index Faces
+          Take Selfie
         </Button>
+
+        {user.imageUploaded && <Text
+          style={{
+            ...GlobalStyles.subHeaderText,
+            textAlign: 'center',
+          }}
+        >
+          You have successfully uploaded your selfie 🎉
+          <Text style={{fontSize: 12}}>
+            You can add more to improve recognition accuracy
+          </Text>
+        </Text>}
+
       </View>
       <StatusBar style="auto" />
     </View>
