@@ -1,4 +1,4 @@
-# RN AWS Rekognition face indexer
+# 🚧 WIP: RN AWS Rekognition face indexer
 A very simple React Native to index images to AWS Rekognition
 
 ### Features
