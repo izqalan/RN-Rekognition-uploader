@@ -1,5 +1,5 @@
 // noinspection JSValidateTypes
-import React, { useState,  useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Alert, View, Linking } from 'react-native'
 import { Button, Text, TextInput } from 'react-native-paper';
 import { GlobalStyles } from '../lib/constants'
@@ -13,7 +13,7 @@ export default function AuthScreen() {
   const [signInLoading, setSignInLoading] = useState(Boolean(false))
   const [googleSingInLoading, setGoogleSingInLoading] = useState(Boolean(false));
 
-  
+
   const handleLogin = async (type, email, password) => {
     type === 'LOGIN' ? setSignInLoading(true) : setSignUpLoading(true)
     const { error, user } =
@@ -25,21 +25,28 @@ export default function AuthScreen() {
     setSignInLoading(false)
   }
 
-  
+
 
   async function signInWithGoogle() {
-    setGoogleSingInLoading(true)
-    const res = await supabase.auth.signIn({
-      provider: 'google',
-    })
-    let googleAuthUrl = res.url + `&redirect_to=${process.env.REACT_NATIVE_SUPABASE_URL}/auth/v1/callback`;
-    let result = await WebBrowser.openAuthSessionAsync(googleAuthUrl);
-    let urlString = result.url.replace('#', '?');
-    let url = new URL(urlString);
-    let refreshToken = url.searchParams.get('refresh_token');
-    const { error } = await supabase.auth.signIn({ refreshToken });
-    if (error) Alert.alert(error.message);
-    setGoogleSingInLoading(false);
+    try {
+      setGoogleSingInLoading(true)
+      const res = await supabase.auth.signIn({
+        provider: 'google',
+      }, {
+        redirectTo: 'exp://192.168.0.160:19000'
+      })
+      let googleAuthUrl = res.url + `&redirect_to=${process.env.REACT_NATIVE_SUPABASE_URL}/auth/v1/callback`;
+      let result = await WebBrowser.openAuthSessionAsync(googleAuthUrl);
+      let urlString = result.url.replace('#', '?');
+      let url = new URL(urlString);
+      let refreshToken = url.searchParams.get('refresh_token');
+      const { error } = await supabase.auth.signIn({ refreshToken });
+      if (error) Alert.alert(error.message);
+      setGoogleSingInLoading(false);
+    } catch (error) {
+      if (error) Alert.alert(error.message);
+      setGoogleSingInLoading(false);
+    }
   }
 
   return (
