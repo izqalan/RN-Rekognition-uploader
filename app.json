@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "Face Indexer",
+    "scheme": "uniten.faceindexer",
     "slug": "face-indexer",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,11 +14,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.izqalan.uniten",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to index faces."
+      }
     },
     "android": {
       "package": "dev.izqalan.uniten",
