@@ -27,11 +27,11 @@ export default function AuthScreen() {
 
 
 
-  async function signInWithGoogle() {
+  async function signInWithProvider(provider) {
     try {
       setGoogleSingInLoading(true)
       const res = await supabase.auth.signIn({
-        provider: 'google',
+        provider,
       }, {
         redirectTo: 'exp://192.168.0.160:19000'
       })
@@ -103,9 +103,20 @@ export default function AuthScreen() {
           color="#4285f4"
           disabled={googleSingInLoading}
           loading={googleSingInLoading}
-          onPress={() => signInWithGoogle()}
+          onPress={() => signInWithProvider('google')}
         >
           Sign in with Google
+        </Button>
+      </View>
+      <View style={[GlobalStyles.verticallySpaced]}>
+        <Button
+          mode="outlined"
+          color="#050505"
+          disabled={googleSingInLoading}
+          loading={googleSingInLoading}
+          onPress={() => signInWithProvider('azure')}
+        >
+          Sign in with Microsoft
         </Button>
       </View>
     </View>
