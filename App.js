@@ -1,4 +1,6 @@
-import React from 'react'
+import React, {useState, useEffect, useRef} from 'react'
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
 import { UserContextProvider, useUser } from './components/UserContext'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -10,6 +12,16 @@ import ProfileScreen from "./screens/ProfileScreen";
 import MainScreen from "./screens/MainScreen";
 import CameraScreen from './screens/CameraScreen';
 import 'react-native-url-polyfill/auto';
+import { Platform } from 'react-native';
+import { registerForPushNotificationsAsync } from './components/PushNotifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -63,6 +75,24 @@ const Container = () => {
 }
 
 export default function App() {
+  
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    
+
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener();
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener();
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
   return (
     <UserContextProvider>
       <PaperProvider theme={theme}>

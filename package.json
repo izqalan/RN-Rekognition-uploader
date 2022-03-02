@@ -18,6 +18,8 @@
     "buffer": "^6.0.3",
     "expo": "~44.0.0",
     "expo-camera": "^12.1.0",
+    "expo-device": "^4.1.1",
+    "expo-notifications": "^0.14.1",
     "expo-status-bar": "~1.2.0",
     "expo-web-browser": "^10.1.1",
     "react": "17.0.1",

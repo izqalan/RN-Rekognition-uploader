@@ -1,10 +1,13 @@
 // noinspection JSValidateTypes
 import React, { useState, useEffect } from 'react'
-import { Alert, View, Linking } from 'react-native'
+import { Alert, View, Platform } from 'react-native'
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
 import { Button, Text, TextInput } from 'react-native-paper';
 import { GlobalStyles } from '../lib/constants'
 import { supabase } from '../lib/initSupabase'
 import * as WebBrowser from 'expo-web-browser';
+import { registerForPushNotificationsAsync } from '../components/PushNotifications';
 
 export default function AuthScreen() {
   const [email, setEmail] = useState('')
@@ -13,6 +16,19 @@ export default function AuthScreen() {
   const [signInLoading, setSignInLoading] = useState(Boolean(false))
   const [googleSingInLoading, setGoogleSingInLoading] = useState(Boolean(false));
 
+  const handleDeviceToken = async (userId) => {
+    try {
+      const token = await registerForPushNotificationsAsync(Device, Notifications, Platform);
+      console.log('token', token)
+      const { data, error } = await supabase
+        .from('users')
+        .update({ deviceToken: token })
+        .eq('id', userId);
+      console.log('handleDeviceToken', data, error);
+    } catch (error) {
+      console.error('error', error);
+    }
+  }
 
   const handleLogin = async (type, email, password) => {
     type === 'LOGIN' ? setSignInLoading(true) : setSignUpLoading(true)
@@ -20,6 +36,7 @@ export default function AuthScreen() {
       type === 'LOGIN'
         ? await supabase.auth.signIn({ email, password })
         : await supabase.auth.signUp({ email, password })
+    if (!error && user) await handleDeviceToken(user.id);
     if (!error && !user) Alert.alert('Check your email for the login link!')
     if (error) Alert.alert(error.message)
     setSignInLoading(false)
