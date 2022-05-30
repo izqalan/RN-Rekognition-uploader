@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { AppRegistry, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AppRegistry, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 import AWS from 'aws-sdk';
 import config from '../lib/aws-config';
@@ -11,6 +11,8 @@ import { supabase } from '../lib/initSupabase';
 export default function CameraScreen({ route, navigation }) {
 
   const { userId } = route.params;
+  
+  // const [currentImage, setCurrentImage] = useState(null);
 
   AWS.config.update({
     accessKeyId: config.accessKeyId,
@@ -43,8 +45,9 @@ export default function CameraScreen({ route, navigation }) {
   const takePicture = async () => {
     showModal();
     if (cameraRef) {
-      const options = { quality: 1, base64: true };
+      const options = { quality: 0.1, base64: true, aspect: [4, 3] };
       const data = await cameraRef.current.takePictureAsync(options);
+      // setCurrentImage(`data:img/jpg;base64,${data.base64}`);
       const buffer = new Buffer.from(data.base64, 'base64');
 
       try {
@@ -92,6 +95,7 @@ export default function CameraScreen({ route, navigation }) {
       <Camera
         ref={cameraRef}
         style={styles.camera}
+        ratio="4:3"
         type={Camera.Constants.Type.front}>
         <Toast />
         <Provider>
@@ -101,6 +105,7 @@ export default function CameraScreen({ route, navigation }) {
               onDismiss={hideModal}
               dismissable={false}
               contentContainerStyle={containerStyle}>
+              {/* <Image style={{width: 120, height: 120}} source={{uri: currentImage}} /> */}
               <Text>Uploading Image...</Text>
             </Modal>
           </Portal>
