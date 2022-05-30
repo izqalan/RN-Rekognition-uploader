@@ -35,15 +35,31 @@ export default function AuthScreen() {
     const { error, user } =
       type === 'LOGIN'
         ? await supabase.auth.signIn({ email, password })
-        : await supabase.auth.signUp({ email, password })
+        : await supabase.auth.signUp({ email, password }, {
+          data: { 
+            role: 'attendee' 
+          }
+        })
     if (!error && user) await handleDeviceToken(user.id);
     if (!error && !user) Alert.alert('Check your email for the login link!')
     if (error) Alert.alert(error.message)
-    Alert.alert('Check your email for the login link!');
     setSignUpLoading(false)
     setSignInLoading(false)
   }
 
+  const handleSignUp = async (email, password) => {
+    setSignUpLoading(true);
+    const { error, user } = await supabase.auth.signUp({ email, password }, {
+      data: { 
+        role: 'attendee' 
+      }
+    })
+
+    if (!error && user) Alert.alert('Check your email for the login link!')
+    if (error) Alert.alert(error.message)
+    setSignUpLoading(false)
+    
+  }
 
 
   async function signInWithProvider(provider) {
@@ -72,7 +88,7 @@ export default function AuthScreen() {
     <View style={GlobalStyles.container}>
       <View style={{ marginHorizontal: 5 }}>
         <Text style={GlobalStyles.headerText}>Face Indexer App</Text>
-        <Text style={{ marginBottom: 15 }}>Upload your faces for facial recognition attendance taking.</Text>
+        <Text style={{ marginBottom: 15 }}>Upload your faces for facial recognition attendance taking. This application is for attendees only.</Text>
         <Text style={GlobalStyles.subHeaderText}>Login or create a new account</Text>
       </View>
       <View style={GlobalStyles.verticallySpaced}>
@@ -111,7 +127,7 @@ export default function AuthScreen() {
           mode="contained"
           disabled={signUpLoading}
           loading={signUpLoading}
-          onPress={() => handleLogin('SIGNUP', email, password)}
+          onPress={() => handleSignUp(email, password)}
         >
           Sign up
         </Button>
