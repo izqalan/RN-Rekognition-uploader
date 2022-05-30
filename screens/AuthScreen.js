@@ -68,6 +68,7 @@ export default function AuthScreen() {
       const res = await supabase.auth.signIn({
         provider,
       }, {
+        // redirect to app after sign in (only works locally)
         redirectTo: 'exp://192.168.0.160:19000'
       })
       let googleAuthUrl = res.url + `&redirect_to=${process.env.REACT_NATIVE_SUPABASE_URL}/auth/v1/callback`;
@@ -75,7 +76,10 @@ export default function AuthScreen() {
       let urlString = result.url.replace('#', '?');
       let url = new URL(urlString);
       let refreshToken = url.searchParams.get('refresh_token');
-      const { error } = await supabase.auth.signIn({ refreshToken });
+      const { error, user } = await supabase.auth.signIn({ refreshToken });
+      if (user.user_metadata.role === undefined) {
+        await supabase.auth.update({data: { role: 'attendee' }});
+      }
       if (error) Alert.alert(error.message);
       setGoogleSingInLoading(false);
     } catch (error) {
