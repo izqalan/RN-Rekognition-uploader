@@ -39,6 +39,8 @@ export default function AuthScreen() {
     if (!error && user) await handleDeviceToken(user.id);
     if (!error && !user) Alert.alert('Check your email for the login link!')
     if (error) Alert.alert(error.message)
+    Alert.alert('Check your email for the login link!');
+    setSignUpLoading(false)
     setSignInLoading(false)
   }
 
